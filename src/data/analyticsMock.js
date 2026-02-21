@@ -104,7 +104,7 @@ export const generateDriverHistory = (driverId) => {
 
 // --- EXPENSE MOCK DATA STORE ---
 // We create a simple store to allow components to share state
-let expenseDataStore = [
+export let expenseDataStore = [
     { id: 'EXP-321', tripId: '321', driverId: 'devashya', distance: 1000, fuelCost: 19000, miscExpense: 500, status: 'Completed', date: '2023-10-24T10:00:00Z' },
     { id: 'EXP-322', tripId: '322', driverId: 'venerated_starling', distance: 450, fuelCost: 8500, miscExpense: 0, status: 'Approved', date: '2023-10-25T14:30:00Z' },
     { id: 'EXP-323', tripId: '323', driverId: 'cuddly_zebra', distance: 1200, fuelCost: 22000, miscExpense: 1200, status: 'Pending', date: '2023-10-26T09:15:00Z' },
@@ -151,3 +151,21 @@ export const getDriverExpenseStats = (driverId) => {
         trips: driverExpenses
     };
 };
+// --- DISPATCHER MOCK DATA ---
+export const mockVehicles = [
+    { id: 'V1', nameModel: 'Volvo FH16', PlateNumber: 'FT-9082', type: 'Heavy Duty', status: 'Available', maxCapacity: 45000 },
+    { id: 'V2', nameModel: 'Scania R500', PlateNumber: 'SN-4412', type: 'Heavy Duty', status: 'On Trip', maxCapacity: 42000 },
+    { id: 'V3', nameModel: 'Mercedes Actros', PlateNumber: 'MB-7721', type: 'Medium Duty', status: 'Available', maxCapacity: 28000 },
+    { id: 'V4', nameModel: 'MAN TGX', PlateNumber: 'MN-1109', type: 'Heavy Duty', status: 'Available', maxCapacity: 40000 },
+];
+
+export const mockDrivers = [
+    { id: 'D1', name: 'John Doe', status: 'On Duty', licenseExpiry: '2027-12-31' },
+    { id: 'D2', name: 'Jane Smith', status: 'On Trip', licenseExpiry: '2026-06-15' },
+    { id: 'D3', name: 'Mike Johnson', status: 'Off Duty', licenseExpiry: '2025-01-20' },
+];
+
+export const mockTrips = [
+    { id: 'T1', vehicleId: 'V2', driverId: 'D2', status: 'Dispatched', origin: 'New York', destination: 'Chicago', cargoWeight: 38500, startOdometer: 125400 },
+    { id: 'T2', vehicleId: 'V1', driverId: 'D1', status: 'Completed', origin: 'Boston', destination: 'Miami', cargoWeight: 41200, startOdometer: 88200, endOdometer: 90150 },
+];

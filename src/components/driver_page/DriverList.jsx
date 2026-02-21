@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Filter, ArrowUpDown } from 'lucide-react';
-import { generateDriverData } from '../data/analyticsMock';
+import { generateDriverData } from '../../data/analyticsMock';
 
 export default function DriverList({ onDriverSelect }) {
     const [drivers, setDrivers] = useState([]);
@@ -102,8 +102,8 @@ export default function DriverList({ onDriverSelect }) {
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-center">
                                         <span className={`inline-flex items-center justify-center min-w-[2rem] px-2 py-1 text-xs font-bold rounded-md ${driver.complaints === 0 ? 'bg-emerald-50 text-emerald-700' :
-                                                driver.complaints <= 2 ? 'bg-amber-50 text-amber-700' :
-                                                    'bg-red-50 text-red-700'
+                                            driver.complaints <= 2 ? 'bg-amber-50 text-amber-700' :
+                                                'bg-red-50 text-red-700'
                                             }`}>
                                             {driver.complaints}
                                         </span>

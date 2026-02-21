@@ -3,8 +3,13 @@
 @theme {
   --color-primary-50: #eff6ff;
   --color-primary-100: #dbeafe;
+  --color-primary-200: #bfdbfe;
+  --color-primary-300: #93c5fd;
+  --color-primary-400: #60a5fa;
   --color-primary-500: #3b82f6;
   --color-primary-600: #2563eb;
+  --color-primary-700: #1d4ed8;
+  --color-primary-800: #1e40af;
   --color-primary-900: #1e3a8a;
 
   --color-success-500: #10b981;
@@ -142,5 +147,99 @@ body {
   .stagger-3 {
     animation-delay: 300ms;
     opacity: 0;
+  }
+
+  /* Dispatch Module Utilities */
+  .custom-app-container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full;
+  }
+
+  .dispatcher-header {
+    @apply mb-10 pb-6 border-b border-slate-200;
+  }
+
+  .dispatcher-header h1 {
+    @apply text-3xl font-black text-slate-900 tracking-tighter uppercase;
+  }
+
+  .dispatcher-header p {
+    @apply text-slate-500 text-sm font-bold uppercase tracking-widest mt-1;
+  }
+
+  .dispatcher-stack {
+    @apply grid grid-cols-1 lg:grid-cols-3 gap-10 items-start;
+  }
+
+  .section-headline {
+    @apply text-lg font-black text-slate-900 uppercase tracking-tight mb-6 flex items-center gap-2;
+  }
+
+  .form-section {
+    @apply lg:sticky lg:top-24;
+  }
+
+  .field-group {
+    @apply bg-white p-6 rounded-2xl border border-slate-100 shadow-sm space-y-6;
+  }
+
+  .field-row {
+    @apply grid grid-cols-1 sm:grid-cols-2 gap-4;
+  }
+
+  .input-label {
+    @apply block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2 ml-1;
+  }
+
+  .custom-input {
+    @apply w-full px-4 py-3.5 bg-slate-50 border-2 border-slate-100 rounded-xl focus:outline-none focus:ring-4 focus:ring-primary-500/5 focus:border-primary-600 transition-all text-slate-900 font-bold text-sm;
+  }
+
+  .btn-submit-blue {
+    @apply w-full py-4 bg-primary-600 text-white font-black rounded-xl shadow-lg transition-all transform active:translate-y-0 text-sm uppercase tracking-widest cursor-pointer;
+  }
+
+  .btn-submit-blue:hover {
+    @apply bg-primary-700 -translate-y-0.5 shadow-primary-600/20;
+  }
+
+  .table-section {
+    @apply lg:col-span-2;
+  }
+
+  .btn-secondary-outline {
+    @apply px-4 py-2 border-2 border-slate-100 text-slate-600 font-bold text-xs rounded-lg transition-all cursor-pointer;
+  }
+
+  .btn-secondary-outline:hover {
+    @apply border-primary-500 text-primary-600;
+  }
+
+  /* Enhanced Tables */
+  .premium-table-container {
+    @apply bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden;
+  }
+
+  .premium-table {
+    @apply min-w-full divide-y divide-slate-100;
+  }
+
+  .premium-table thead {
+    @apply bg-slate-50/50;
+  }
+
+  .premium-table th {
+    @apply px-6 py-4 text-left text-[10px] font-black text-slate-400 uppercase tracking-widest;
+  }
+
+  .premium-table td {
+    @apply px-6 py-5 whitespace-nowrap align-middle;
+  }
+
+  .text-bold-dark {
+    @apply block text-sm font-black text-slate-900 leading-tight;
+  }
+
+  .text-muted-small {
+    @apply block text-[10px] font-bold text-slate-400 uppercase tracking-wider mt-1;
   }
 }

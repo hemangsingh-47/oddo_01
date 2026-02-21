@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { ArrowLeft, User, IdCard, ShieldAlert, Award, AlertTriangle, TrendingUp, Calendar, Clock, MapPin, CheckCircle, FileText, Ban } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer } from 'recharts';
-import { generateDriverData, generateDriverHistory, getDriverExpenseStats, subscribeToExpenses } from '../data/analyticsMock';
+import { useParams, useNavigate } from 'react-router-dom';
+import { generateDriverData, generateDriverHistory, getDriverExpenseStats, subscribeToExpenses } from '../../data/analyticsMock';
 
 const DetailCard = ({ title, value, icon: Icon, colorClass, subtitle }) => (
     <div className="bg-white border border-gray-100 rounded-xl p-5 shadow-sm flex items-start gap-4">
@@ -16,11 +17,20 @@ const DetailCard = ({ title, value, icon: Icon, colorClass, subtitle }) => (
     </div>
 );
 
-export default function DriverDetail({ driverId, onBack }) {
+export default function DriverDetail({ driverId: propDriverId, onBack }) {
+    const { id: urlDriverId } = useParams();
+    const navigate = useNavigate();
+    const driverId = propDriverId || urlDriverId;
+
     const [driver, setDriver] = useState(null);
     const [history, setHistory] = useState([]);
     const [expenseStats, setExpenseStats] = useState({ totalSpend: 0, avgPerTrip: 0, count: 0, trips: [] });
     const [isLoading, setIsLoading] = useState(true);
+
+    const handleBack = () => {
+        if (onBack) onBack();
+        else navigate('/drivers');
+    };
 
     useEffect(() => {
         setIsLoading(true);
@@ -72,7 +82,7 @@ export default function DriverDetail({ driverId, onBack }) {
             {/* Header / Back Navigation */}
             <div className="flex items-center gap-4">
                 <button
-                    onClick={onBack}
+                    onClick={handleBack}
                     className="p-2 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors text-gray-600"
                 >
                     <ArrowLeft className="w-5 h-5" />
@@ -177,12 +187,12 @@ export default function DriverDetail({ driverId, onBack }) {
                     <div className="space-y-4 relative z-10">
                         <div>
                             <p className="text-xs font-bold text-gray-500 mb-1">Total Fuel Spend</p>
-                            <p className="text-3xl font-extrabold text-white">₹{expenseStats.totalSpend.toLocaleString()}</p>
+                            <p className="text-3xl font-extrabold text-white">₹{expenseStats.totalSpend?.toLocaleString() || '0'}</p>
                         </div>
                         <div className="flex gap-8">
                             <div>
                                 <p className="text-xs font-bold text-gray-500 mb-1">Avg. Cost / Trip</p>
-                                <p className="text-lg font-bold text-gray-200">₹{expenseStats.avgPerTrip.toLocaleString()}</p>
+                                <p className="text-lg font-bold text-gray-200">₹{expenseStats.avgPerTrip?.toLocaleString() || '0'}</p>
                             </div>
                             <div>
                                 <p className="text-xs font-bold text-gray-500 mb-1">Trips Logged</p>
@@ -212,7 +222,7 @@ export default function DriverDetail({ driverId, onBack }) {
                                         <tr key={trip.id} className="hover:bg-gray-50">
                                             <td className="px-4 py-3 text-sm font-bold text-gray-900">#{trip.tripId}</td>
                                             <td className="px-4 py-3 text-sm text-gray-600">{trip.distance} km</td>
-                                            <td className="px-4 py-3 text-sm font-bold text-amber-600 text-right">₹{trip.fuelCost.toLocaleString()}</td>
+                                            <td className="px-4 py-3 text-sm font-bold text-amber-600 text-right">₹{trip.fuelCost?.toLocaleString() || '0'}</td>
                                             <td className="px-4 py-3 text-sm text-center">
                                                 <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${trip.status === 'Completed' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>
                                                     {trip.status}

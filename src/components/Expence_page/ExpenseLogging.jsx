@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Filter, Plus, FileText, CheckCircle, Clock } from 'lucide-react';
-import { getExpenses, subscribeToExpenses, addExpense, generateDriverData } from '../data/analyticsMock';
+import { getExpenses, subscribeToExpenses, addExpense, generateDriverData } from '../../data/analyticsMock';
 
 export default function ExpenseLogging() {
     const [expenses, setExpenses] = useState([]);

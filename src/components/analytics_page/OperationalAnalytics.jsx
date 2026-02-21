@@ -12,7 +12,7 @@ import {
     generateAiInsights,
     getExpenses,
     subscribeToExpenses
-} from '../data/analyticsMock';
+} from '../../data/analyticsMock';
 
 const AdvancedKPICard = ({ title, value, change, changeType, icon: Icon, sparklineData, dataKey, sparklineColor, tooltip }) => (
     <div className="premium-card p-5 flex flex-col group cursor-default relative overflow-hidden">
