@@ -29,12 +29,11 @@ export const ROLES = {
     },
     ADMIN: {
         id: 'ADMIN',
-        label: 'Security Officer (Admin)',
+        label: 'Security Officer',
         icon: '🛡️',
         image: 'https://images.unsplash.com/photo-1590650046871-92c8872c5f16?q=80&w=400&h=400&auto=format&fit=crop',
-        description: 'Manage user approvals and system security.',
+        description: 'Manage user approvals, system security, and audit logs.',
         color: 'warning',
-        isAdmin: true
     }
 }
 
@@ -49,19 +48,22 @@ export function AuthProvider({ children }) {
         }
     })
 
-    const login = (roleId) => {
+    const login = (email, password, roleId) => {
         const roleInfo = ROLES[roleId]
         if (!roleInfo) throw new Error('Invalid terminal access.')
 
-        const guestUser = {
-            id: `GUEST-${Date.now()}`,
-            name: 'Fleet Operator',
+        // Create a realistic user profile
+        const authenticatedUser = {
+            id: `USR-${Math.floor(1000 + Math.random() * 9000)}`,
+            email: email,
+            name: email.split('@')[0], // Extract name from email for demo
             role: roleId,
-            status: 'APPROVED'
+            status: 'APPROVED',
+            lastLogin: new Date().toISOString()
         }
 
-        setUser(guestUser)
-        localStorage.setItem('currentUser', JSON.stringify(guestUser))
+        setUser(authenticatedUser)
+        localStorage.setItem('currentUser', JSON.stringify(authenticatedUser))
     }
 
     const logout = () => {
