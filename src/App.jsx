@@ -8,7 +8,7 @@ function App() {
   return (
     <div className="min-h-screen flex flex-col font-sans relative">
       {/* Decorative Blob */}
-      <div className="absolute top-0 left-0 w-full h-96 bg-primary-500/5 rounded-full blur-3xl -z-10 transform -translate-y-1/2 rounded-[100%]"></div>
+      <div className="absolute top-0 left-0 w-full h-96 bg-primary-100/30 rounded-full blur-3xl -z-10 transform -translate-y-1/2 rounded-[100%]"></div>
 
       {/* Top Navigation Bar */}
       <header className="glass-panel sticky top-0 z-30 transition-all duration-300">
@@ -17,10 +17,10 @@ function App() {
             {/* Logo & Nav */}
             <div className="flex items-center">
               <div className="flex-shrink-0 flex items-center gap-3 pr-6 border-r border-gray-200/50 h-10">
-                <div className="w-10 h-10 bg-gradient-to-br from-primary-900 to-primary-600 rounded-xl flex items-center justify-center shadow-lg shadow-primary-500/30 transform transition hover:scale-105">
+                <div className="w-10 h-10 bg-gradient-to-br from-primary-600 to-primary-500 rounded-xl flex items-center justify-center shadow-md shadow-primary-500/20 transform transition hover:scale-105">
                   <Activity className="w-6 h-6 text-white" />
                 </div>
-                <span className="font-extrabold text-2xl gradient-text tracking-tight">FleetFlow</span>
+                <span className="font-extrabold text-2xl text-gray-900 tracking-tight">FleetFlow</span>
               </div>
               <nav className="hidden sm:ml-6 sm:flex sm:space-x-4 h-full">
                 <button

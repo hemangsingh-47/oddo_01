@@ -6,12 +6,18 @@ export const generateFinancialData = () => {
         const maintenance = Math.floor(Math.random() * 50000) + 50000; // 50K - 1L
         const netProfit = revenue - (fuelCost + maintenance);
 
+        // Generate 7-day sparkline mock data
+        const sparklineRevenue = Array.from({ length: 7 }, () => Math.floor(revenue / 30) + (Math.random() * 5000 - 2500));
+        const sparklineFuel = Array.from({ length: 7 }, () => Math.floor(fuelCost / 30) + (Math.random() * 1000 - 500));
+
         return {
             month,
             revenue,
             fuelCost,
             maintenance,
-            netProfit
+            netProfit,
+            sparklineRevenue,
+            sparklineFuel
         };
     });
 };
@@ -52,4 +58,22 @@ export const calculateUtilization = (vehicles) => {
 
 export const identifyDeadStock = (vehicles) => {
     return vehicles.filter(v => v.status === 'Idle' || v.milesDriven < 500);
+};
+
+export const generateActivityFeed = () => {
+    return [
+        { id: 1, type: 'maintenance', title: 'Scheduled Maintenance Complete', description: 'VAN-03 has completed its 10,000 km service.', time: '2 hours ago', iconColor: 'text-blue-500', bgColor: 'bg-blue-50' },
+        { id: 2, type: 'alert', title: 'Route Deviation Alert', description: 'TRK-01 detected off planned route by 15km.', time: '4 hours ago', iconColor: 'text-amber-500', bgColor: 'bg-amber-50' },
+        { id: 3, type: 'compliance', title: 'Insurance Renewal Due', description: 'Action required for TRK-02 fleet insurance renewal in 5 days.', time: '1 day ago', iconColor: 'text-red-500', bgColor: 'bg-red-50' },
+        { id: 4, type: 'system', title: 'Monthly Report Generated', description: 'October Financial Analytics report is ready for download.', time: '2 days ago', iconColor: 'text-emerald-500', bgColor: 'bg-emerald-50' }
+    ];
+};
+
+export const generateAiInsights = () => {
+    return [
+        { id: 1, title: 'Fuel Cost Anomaly', description: 'Fuel costs increased 14% compared to last month, driven primarily by TRK-01 efficiency drop.', type: 'negative', actionText: 'View Vehicle Details' },
+        { id: 2, title: 'Utilization Optimization', description: '3 idle vehicles identified. Reassigning them could improve fleet ROI by an estimated 2.4%.', type: 'warning', actionText: 'Analyze Assignments' },
+        { id: 3, title: 'Maintenance Prediction', description: 'VAN-01 and VAN-02 are approaching optimal maintenance windows based on usage patterns.', type: 'info', actionText: 'Schedule Maintenance' },
+        { id: 4, title: 'Positive Trend', description: 'Overall fleet net profit is trending 8% higher than the quarterly target.', type: 'positive', actionText: 'View Financials' }
+    ];
 };
