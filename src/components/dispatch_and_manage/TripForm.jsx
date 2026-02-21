@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Truck, Users, Weight, MapPin, Navigation, AlertCircle, Plus } from 'lucide-react';
 
 export default function TripForm({ vehicles, drivers, createTrip }) {
     const [vehicleId, setVehicleId] = useState('');
@@ -22,7 +23,7 @@ export default function TripForm({ vehicles, drivers, createTrip }) {
 
         // Validation 1: All fields filled
         if (!vehicleId || !driverId || !cargoWeight || !origin || !destination || startOdometer === '') {
-            setError('Please select a vehicle, driver, and fill out all details.');
+            setError('Missing Fields: Please select a vehicle, driver, and complete all route parameters.');
             return;
         }
 
@@ -31,13 +32,13 @@ export default function TripForm({ vehicles, drivers, createTrip }) {
 
         // Validation 2: Positive cargo weight
         if (weightNum <= 0) {
-            setError('Cargo weight must be a positive number.');
+            setError('Invalid Weight: Cargo weight must be a positive integer.');
             return;
         }
 
         // Validation 3: Positive start odometer
         if (startOdoNum < 0) {
-            setError('Start odometer cannot be negative.');
+            setError('Invalid Telemetry: Start odometer cannot be negative.');
             return;
         }
 
@@ -45,7 +46,7 @@ export default function TripForm({ vehicles, drivers, createTrip }) {
 
         // Validation 4: Cargo weight vs maxCapacity
         if (weightNum > selectedVehicle.maxCapacity) {
-            setError(`Cargo weight (${weightNum.toLocaleString()} lbs) exceeds max capacity of ${selectedVehicle.nameModel} (${(selectedVehicle.maxCapacity || 0).toLocaleString()} lbs).`);
+            setError(`Capacity Warning: Cargo weight (${weightNum.toLocaleString()} lbs) exceeds max capacity of ${selectedVehicle.nameModel} (${(selectedVehicle.maxCapacity || 0).toLocaleString()} lbs).`);
             return;
         }
 
@@ -73,19 +74,22 @@ export default function TripForm({ vehicles, drivers, createTrip }) {
     return (
         <form className="field-group" onSubmit={handleSubmit}>
             {error && (
-                <div className="p-3 bg-red-50 border-l-4 border-red-500 rounded-lg mb-4">
-                    <p className="text-red-800 text-[10px] font-bold uppercase tracking-widest">{error}</p>
+                <div className="p-4 bg-red-50 border-l-4 border-red-500 rounded-xl mb-6 flex items-center gap-3">
+                    <AlertCircle className="w-5 h-5 text-red-600" />
+                    <p className="text-red-900 text-sm font-bold">{error}</p>
                 </div>
             )}
 
-            <div>
-                <label className="input-label">ASSIGNMENTS</label>
+            <div className="space-y-4">
+                <label className="input-label flex items-center gap-2">
+                    <Truck className="w-4 h-4" /> Operational Assignments
+                </label>
                 <div className="field-row">
                     <select className="custom-input" value={vehicleId} onChange={e => setVehicleId(e.target.value)}>
                         <option value="">-- Select Available Vehicle --</option>
                         {availableVehicles.map(v => (
                             <option key={v.id} value={v.id}>
-                                {v.nameModel} ({v.PlateNumber})
+                                {v.nameModel} • {v.PlateNumber}
                             </option>
                         ))}
                     </select>
@@ -101,46 +105,56 @@ export default function TripForm({ vehicles, drivers, createTrip }) {
                 </div>
             </div>
 
-            <div>
-                <label className="input-label">CARGO DETAILS</label>
+            <div className="space-y-4">
+                <label className="input-label flex items-center gap-2">
+                    <Weight className="w-4 h-4" /> Load Parameters
+                </label>
                 <input
                     className="custom-input"
                     type="number"
-                    placeholder="Cargo Weight (lbs)"
+                    placeholder="Total Cargo Weight (LBS)"
                     value={cargoWeight}
                     onChange={e => setCargoWeight(e.target.value)}
                 />
             </div>
 
-            <div>
-                <label className="input-label">ROUTING & TELEMETRY</label>
-                <div className="field-row mb-4">
+            <div className="space-y-4">
+                <label className="input-label flex items-center gap-2">
+                    <MapPin className="w-4 h-4" /> Logistical Routing
+                </label>
+                <div className="field-row">
                     <input
                         className="custom-input"
                         type="text"
-                        placeholder="Origin (e.g., Dallas, TX)"
+                        placeholder="Origin Point (e.g., Dallas Hub)"
                         value={origin}
                         onChange={e => setOrigin(e.target.value)}
                     />
                     <input
                         className="custom-input"
                         type="text"
-                        placeholder="Destination (e.g., Austin, TX)"
+                        placeholder="Destination Point (e.g., Austin Terminal)"
                         value={destination}
                         onChange={e => setDestination(e.target.value)}
                     />
                 </div>
-                <input
-                    className="custom-input"
-                    type="number"
-                    placeholder="Start Odometer Reading (mi)"
-                    value={startOdometer}
-                    onChange={e => setStartOdometer(e.target.value)}
-                />
+                <div className="mt-4">
+                    <label className="input-label flex items-center gap-2">
+                        <Navigation className="w-4 h-4" /> Initial Telemetry
+                    </label>
+                    <input
+                        className="custom-input"
+                        type="number"
+                        placeholder="Starting Odometer Reading (MI)"
+                        value={startOdometer}
+                        onChange={e => setStartOdometer(e.target.value)}
+                    />
+                </div>
             </div>
 
-            <button type="submit" className="btn-submit-blue">
-                + Create Draft Trip
+            <button type="submit" className="btn-submit-blue group">
+                <Plus className="w-5 h-5 inline-block mr-2 group-hover:rotate-90 transition-transform" />
+                Initialize Operational Dispatch
             </button>
         </form>
     );

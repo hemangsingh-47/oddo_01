@@ -35,7 +35,8 @@ const ControlCenter = () => {
         { id: 'drivers', label: 'Driver Operations', path: '/drivers', icon: Users, color: 'text-indigo-600', bg: 'bg-indigo-50', count: mockDrivers.length },
         { id: 'dispatch', label: 'Global Dispatch', path: '/dispatch', icon: LayoutDashboard, color: 'text-emerald-600', bg: 'bg-emerald-50', count: mockTrips.length },
         { id: 'analytics', label: 'Financial Intel', path: '/analytics', icon: PieChart, color: 'text-blue-600', bg: 'bg-blue-50', count: 'Active' },
-        { id: 'expenses', label: 'Fuel & Logistics', path: '/expenses', icon: DollarSign, color: 'text-amber-600', bg: 'bg-amber-50', count: expenseDataStore.length }
+        { id: 'expenses', label: 'Fuel & Logistics', path: '/expenses', icon: DollarSign, color: 'text-amber-600', bg: 'bg-amber-50', count: expenseDataStore.length },
+        { id: 'maintenance', label: 'Maintenance Hub', path: '/maintenance', icon: Activity, color: 'text-rose-600', bg: 'bg-rose-50', count: 'Managed' }
     ];
 
     return (
@@ -104,7 +105,7 @@ const ControlCenter = () => {
                             <button
                                 key={mod.id}
                                 onClick={() => navigate(mod.path)}
-                                className="premium-card p-6 flex items-center justify-between group cursor-pointer hover:border-primary-500 transition-all border-l-4 border-l-transparent hover:border-l-primary-500"
+                                className="fleet-card p-6 flex items-center justify-between group cursor-pointer hover:border-primary-500 transition-all border-l-4 border-l-transparent hover:border-l-primary-500"
                             >
                                 <div className="flex items-center gap-4">
                                     <div className={`p-3 rounded-2xl ${mod.bg} ${mod.color} group-hover:scale-110 transition-transform shadow-sm`}>
@@ -121,7 +122,7 @@ const ControlCenter = () => {
                     </div>
 
                     {/* Active Alerts */}
-                    <div className="premium-card overflow-hidden">
+                    <div className="fleet-card overflow-hidden">
                         <div className="p-4 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
                             <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest flex items-center gap-2">
                                 <AlertCircle className="w-4 h-4 text-red-500" /> Critical Terminal Alerts
@@ -158,7 +159,7 @@ const ControlCenter = () => {
                     <h2 className="text-lg font-black text-slate-900 uppercase tracking-tight flex items-center gap-2">
                         <TrendingUp className="w-5 h-5 text-primary-600" /> Live Manifest
                     </h2>
-                    <div className="premium-card p-0 overflow-hidden bg-slate-900 border-slate-800">
+                    <div className="fleet-card p-0 overflow-hidden bg-slate-900 border-slate-800">
                         <div className="p-4 border-b border-slate-800 flex items-center justify-between">
                             <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Active Operations</p>
                             <StatusPill status="On Trip" />

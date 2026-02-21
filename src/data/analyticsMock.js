@@ -1,14 +1,126 @@
+
+// Helper for random picking
+const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+// --- VEHICLE GENERATION ---
+const brands = ['Volvo', 'Scania', 'Mercedes-Benz', 'MAN', 'BharatBenz', 'Ashok Leyland', 'Tata Motors', 'Eicher'];
+const models = {
+    'Volvo': ['FH16', 'FMX', 'FM', 'VNL 860'],
+    'Scania': ['R500', 'G410', 'P250', 'Next Gen S'],
+    'Mercedes-Benz': ['Actros', 'Arocs', 'Atego', 'Unimog'],
+    'MAN': ['TGX', 'TGS', 'TGM', 'TGL'],
+    'BharatBenz': ['3528C', '1923R', '2823R', '4228R'],
+    'Ashok Leyland': ['Ecomet 1215', 'U-3518', 'Captain 2523', 'Boss 1215'],
+    'Tata Motors': ['Prima 5530.S', 'Signa 4825.TK', 'Ultra 1918.T', 'LPT 1613'],
+    'Eicher': ['Pro 6055', 'Pro 3015', 'Pro 2049', 'Pro 8040']
+};
+
+const statuses = ['Available', 'On Trip', 'Maintenance', 'In Shop'];
+const types = ['Heavy Duty', 'Medium Duty', 'Delivery Van', 'Reefer'];
+
+const generateVehicles = (count) => {
+    const list = [];
+    for (let i = 1; i <= count; i++) {
+        const brand = pick(brands);
+        const model = pick(models[brand]);
+        list.push({
+            id: `V${i}`,
+            nameModel: `${brand} ${model}`,
+            PlateNumber: `${brand.substring(0, 2).toUpperCase()}-${Math.floor(1000 + Math.random() * 8999)}`,
+            type: pick(types),
+            status: pick(statuses),
+            maxCapacity: pick([15000, 28000, 42000, 45000, 52000]),
+            milesDriven: Math.floor(Math.random() * 150000) + 10000,
+            fuelUsed: Math.floor(Math.random() * 20000) + 2000
+        });
+    }
+    return list;
+};
+
+// --- DRIVER GENERATION ---
+const firstNames = ['Amit', 'Rajesh', 'Suresh', 'Michael', 'Jane', 'Sarah', 'Priya', 'Vikram', 'Anjali', 'David', 'James', 'Linda', 'Robert', 'Maria', 'Arjun', 'Sanjay', 'Komal', 'Deepak'];
+const lastNames = ['Sharma', 'Verma', 'Singh', 'Smith', 'Doe', 'Kapoor', 'Patel', 'Das', 'Roy', 'Choudhury', 'Iyer', 'Menon', 'Reddy', 'Khan', 'Wilson', 'García'];
+
+const generateDrivers = (count) => {
+    const list = [];
+    for (let i = 1; i <= count; i++) {
+        const name = `${pick(firstNames)} ${pick(lastNames)}`;
+        const status = pick(['On Duty', 'Off Duty', 'Suspended']);
+        list.push({
+            id: `D${i}`,
+            name,
+            status,
+            license: `DL-${Math.floor(100000 + Math.random() * 899999)}`,
+            licenseExpiry: `202${pick([5, 6, 7])}-${pick(['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'])}-20`,
+            completionRate: Math.floor(Math.random() * (100 - 85) + 85),
+            safetyScore: Math.floor(Math.random() * (100 - 80) + 80),
+            complaints: pick([0, 0, 0, 1, 2, 0, 0]),
+            assignedVehicle: null
+        });
+    }
+    return list;
+};
+
+// --- TRIP GENERATION ---
+const cities = ['New York', 'Chicago', 'Miami', 'Houston', 'San Francisco', 'Dallas', 'Austin', 'Seattle', 'Boston', 'Philadelphia', 'Mumbai', 'Delhi', 'Bangalore', 'Chennai', 'Pune'];
+
+const generateTrips = (count, vehicles, drivers) => {
+    const list = [];
+    const tripStatuses = ['Draft', 'Dispatched', 'Completed', 'Cancelled'];
+
+    for (let i = 1; i <= count; i++) {
+        const status = pick(tripStatuses);
+        const origin = pick(cities);
+        let destination = pick(cities);
+        while (destination === origin) destination = pick(cities);
+
+        const v = pick(vehicles);
+        const d = pick(drivers);
+
+        const trip = {
+            id: `T${i}`,
+            vehicleId: v.id,
+            driverId: d.id,
+            status,
+            origin,
+            destination,
+            cargoWeight: Math.floor(Math.random() * (v.maxCapacity - 5000)) + 5000,
+            startOdometer: v.milesDriven - Math.floor(Math.random() * 5000),
+            date: `2023-11-${Math.floor(Math.random() * 20) + 10}T10:00:00Z`
+        };
+
+        if (status === 'Completed') {
+            trip.endOdometer = trip.startOdometer + (Math.floor(Math.random() * 2000) + 300);
+        }
+
+        // Logical side effects for base mock (though components will override with state)
+        if (status === 'Dispatched') {
+            v.status = 'On Trip';
+            d.status = 'On Trip';
+        }
+
+        list.push(trip);
+    }
+    return list;
+};
+
+// INITIALIZE MOCK DATASETS
+export const mockVehicles = generateVehicles(50);
+export const mockDrivers = generateDrivers(40);
+export const mockTrips = generateTrips(75, mockVehicles, mockDrivers);
+
+// --- ANALYTICS FUNCTIONS ---
+
 export const generateFinancialData = () => {
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    return months.map((month) => {
-        const revenue = Math.floor(Math.random() * 500000) + 800000; // 8L - 13L
-        const fuelCost = Math.floor(Math.random() * 100000) + 200000; // 2L - 3L
-        const maintenance = Math.floor(Math.random() * 50000) + 50000; // 50K - 1L
+    let cumulativeProfit = 0;
+    return months.map((month, idx) => {
+        const baseRevenue = 1200000 + (idx * 50000); // Gradual growth
+        const revenue = Math.floor(baseRevenue + (Math.random() * 400000 - 200000));
+        const fuelCost = Math.floor(revenue * 0.22) + (Math.random() * 50000);
+        const maintenance = Math.floor(revenue * 0.08) + (Math.random() * 30000);
         const netProfit = revenue - (fuelCost + maintenance);
-
-        // Generate 7-day sparkline mock data
-        const sparklineRevenue = Array.from({ length: 7 }, () => Math.floor(revenue / 30) + (Math.random() * 5000 - 2500));
-        const sparklineFuel = Array.from({ length: 7 }, () => Math.floor(fuelCost / 30) + (Math.random() * 1000 - 500));
+        cumulativeProfit += netProfit;
 
         return {
             month,
@@ -16,35 +128,33 @@ export const generateFinancialData = () => {
             fuelCost,
             maintenance,
             netProfit,
-            sparklineRevenue,
-            sparklineFuel
+            roi: ((netProfit / (fuelCost + maintenance)) * 100).toFixed(1),
+            sparklineRevenue: Array.from({ length: 7 }, () => Math.floor(revenue / 30) + (Math.random() * 10000 - 5000)),
+            sparklineFuel: Array.from({ length: 7 }, () => Math.floor(fuelCost / 30) + (Math.random() * 2000 - 1000))
         };
     });
 };
 
 export const generateEfficiencyData = () => {
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    return months.map((month) => {
-        return {
-            month,
-            fleetAvg: +(Math.random() * (12 - 8) + 8).toFixed(1), // 8 - 12 km/L
-            target: 10,
-        };
-    });
+    return months.map((month) => ({
+        month,
+        fleetAvg: +(Math.random() * (12 - 8) + 8).toFixed(1),
+        target: 10,
+    }));
 };
 
+// Adapt legacy analytics logic to larger dynamic set
 export const generateVehicleData = () => {
-    return [
-        { id: 'TRK-01', type: 'Heavy Truck', milesDriven: 12500, fuelUsed: 1560, status: 'Active' },
-        { id: 'TRK-02', type: 'Heavy Truck', milesDriven: 11200, fuelUsed: 1450, status: 'Active' },
-        { id: 'VAN-01', type: 'Delivery Van', milesDriven: 8500, fuelUsed: 710, status: 'Active' },
-        { id: 'VAN-02', type: 'Delivery Van', milesDriven: 9100, fuelUsed: 780, status: 'Active' },
-        { id: 'TRK-03', type: 'Heavy Truck', milesDriven: 0, fuelUsed: 0, status: 'Idle' }, // Idle vehicle example
-        { id: 'VAN-03', type: 'Delivery Van', milesDriven: 150, fuelUsed: 18, status: 'Maintenance' },
-    ];
+    return mockVehicles.map(v => ({
+        id: v.id,
+        type: v.type,
+        milesDriven: v.milesDriven,
+        fuelUsed: v.fuelUsed,
+        status: v.status === 'On Trip' ? 'Active' : v.status === 'Available' ? 'Active' : v.status
+    }));
 };
 
-// Analytics Logic
 export const calculateROI = (revenue, costs) => {
     if (costs === 0) return 0;
     return (((revenue - costs) / costs) * 100).toFixed(1);
@@ -52,88 +162,66 @@ export const calculateROI = (revenue, costs) => {
 
 export const calculateUtilization = (vehicles) => {
     if (vehicles.length === 0) return 0;
-    const activeVehicles = vehicles.filter(v => v.status === 'Active').length;
+    const activeVehicles = vehicles.filter(v => v.status === 'Active' || v.status === 'On Trip' || v.status === 'Available').length;
     return ((activeVehicles / vehicles.length) * 100).toFixed(0);
 };
 
 export const identifyDeadStock = (vehicles) => {
-    return vehicles.filter(v => v.status === 'Idle' || v.milesDriven < 500);
+    return vehicles.filter(v => v.status === 'Idle' || v.milesDriven < 500 || v.status === 'Maintenance');
 };
 
-export const generateActivityFeed = () => {
-    return [
-        { id: 1, type: 'maintenance', title: 'Scheduled Maintenance Complete', description: 'VAN-03 has completed its 10,000 km service.', time: '2 hours ago', iconColor: 'text-blue-500', bgColor: 'bg-blue-50' },
-        { id: 2, type: 'alert', title: 'Route Deviation Alert', description: 'TRK-01 detected off planned route by 15km.', time: '4 hours ago', iconColor: 'text-amber-500', bgColor: 'bg-amber-50' },
-        { id: 3, type: 'compliance', title: 'Insurance Renewal Due', description: 'Action required for TRK-02 fleet insurance renewal in 5 days.', time: '1 day ago', iconColor: 'text-red-500', bgColor: 'bg-red-50' },
-        { id: 4, type: 'system', title: 'Monthly Report Generated', description: 'October Financial Analytics report is ready for download.', time: '2 days ago', iconColor: 'text-emerald-500', bgColor: 'bg-emerald-50' }
-    ];
-};
-
-export const generateAiInsights = () => {
-    return [
-        { id: 1, title: 'Fuel Cost Anomaly', description: 'Fuel costs increased 14% compared to last month, driven primarily by TRK-01 efficiency drop.', type: 'negative', actionText: 'View Vehicle Details' },
-        { id: 2, title: 'Utilization Optimization', description: '3 idle vehicles identified. Reassigning them could improve fleet ROI by an estimated 2.4%.', type: 'warning', actionText: 'Analyze Assignments' },
-        { id: 3, title: 'Maintenance Prediction', description: 'VAN-01 and VAN-02 are approaching optimal maintenance windows based on usage patterns.', type: 'info', actionText: 'Schedule Maintenance' },
-        { id: 4, title: 'Positive Trend', description: 'Overall fleet net profit is trending 8% higher than the quarterly target.', type: 'positive', actionText: 'View Financials' }
-    ];
-};
-
-export const generateDriverData = () => {
-    return [
-        { id: 'devashya', name: 'Devashya', license: 'DL-23223', expiry: '22/3/25', completionRate: 92, safetyScore: 89, complaints: 4, status: 'On Duty', assignedVehicle: 'TRK-01' },
-        { id: 'cuddly_zebra', name: 'Cuddly Zebra', license: 'DL-84721', expiry: '14/8/26', completionRate: 97, safetyScore: 94, complaints: 1, status: 'Off Duty', assignedVehicle: null },
-        { id: 'decisive_porcupine', name: 'Decisive Porcupine', license: 'DL-55829', expiry: '05/11/24', completionRate: 88, safetyScore: 82, complaints: 3, status: 'On Duty', assignedVehicle: 'VAN-02' },
-        { id: 'advanced_falcon', name: 'Advanced Falcon', license: 'DL-11934', expiry: '19/2/25', completionRate: 95, safetyScore: 91, complaints: 0, status: 'On Duty', assignedVehicle: 'TRK-02' },
-        { id: 'innocent_lion', name: 'Innocent Lion', license: 'DL-77382', expiry: '30/5/27', completionRate: 85, safetyScore: 78, complaints: 5, status: 'Suspended', assignedVehicle: null },
-        { id: 'venerated_starling', name: 'Venerated Starling', license: 'DL-99210', expiry: '12/12/24', completionRate: 99, safetyScore: 98, complaints: 0, status: 'On Duty', assignedVehicle: 'VAN-01' },
-        { id: 'kartik_joshi', name: 'Kartik Joshi', license: 'DL-44123', expiry: '08/7/25', completionRate: 91, safetyScore: 86, complaints: 2, status: 'Off Duty', assignedVehicle: null },
-        { id: 'vishv_26', name: 'Vishv_26', license: 'DL-66591', expiry: '25/9/26', completionRate: 94, safetyScore: 92, complaints: 1, status: 'On Duty', assignedVehicle: 'TRK-03' }
-    ];
-};
-
-export const generateDriverHistory = (driverId) => {
-    // Generate a generic timeline suitable for any driver for demo purposes
-    return [
-        { id: 101, date: 'Today, 09:42 AM', type: 'compliance', title: 'Pre-trip Inspection Passed', description: 'Vehicle checked and logged with 0 defects.', iconColor: 'text-emerald-500', bgColor: 'bg-emerald-50' },
-        { id: 102, date: 'Yesterday, 14:15 PM', type: 'alert', title: 'Hard Braking Event', description: 'Decelerated > 15 mph/s on Route 82. Speed reduced to 45mph.', iconColor: 'text-amber-500', bgColor: 'bg-amber-50' },
-        { id: 103, date: 'Oct 12, 08:00 AM', type: 'system', title: 'Shift Started', description: 'Logged on duty and assigned to TRK-01.', iconColor: 'text-blue-500', bgColor: 'bg-blue-50' },
-        { id: 104, date: 'Oct 05, 16:30 PM', type: 'compliance', title: 'Safety Training Completed', description: 'Passed quarterly defensive driving module (Score: 95%).', iconColor: 'text-emerald-500', bgColor: 'bg-emerald-50' },
-        { id: 105, date: 'Sep 28, 11:10 AM', type: 'alert', title: 'Speeding Violation (Minor)', description: 'Exceeded posted speed limit by 8mph for 2 minutes.', iconColor: 'text-amber-500', bgColor: 'bg-amber-50' }
-    ];
-};
-
-// --- EXPENSE MOCK DATA STORE ---
-// We create a simple store to allow components to share state
-export let expenseDataStore = [
-    { id: 'EXP-321', tripId: '321', driverId: 'devashya', distance: 1000, fuelCost: 19000, miscExpense: 500, status: 'Completed', date: '2023-10-24T10:00:00Z' },
-    { id: 'EXP-322', tripId: '322', driverId: 'venerated_starling', distance: 450, fuelCost: 8500, miscExpense: 0, status: 'Approved', date: '2023-10-25T14:30:00Z' },
-    { id: 'EXP-323', tripId: '323', driverId: 'cuddly_zebra', distance: 1200, fuelCost: 22000, miscExpense: 1200, status: 'Pending', date: '2023-10-26T09:15:00Z' },
-    { id: 'EXP-324', tripId: '324', driverId: 'advanced_falcon', distance: 300, fuelCost: 5600, miscExpense: 150, status: 'Completed', date: '2023-10-26T16:45:00Z' },
-    { id: 'EXP-325', tripId: '325', driverId: 'kartik_joshi', distance: 800, fuelCost: 15500, miscExpense: 0, status: 'Completed', date: '2023-10-27T08:20:00Z' },
-    { id: 'EXP-326', tripId: '326', driverId: 'devashya', distance: 600, fuelCost: 11000, miscExpense: 300, status: 'Pending', date: '2023-10-27T11:00:00Z' }
+export const generateActivityFeed = () => [
+    { id: 1, type: 'maintenance', title: 'Asset Cycle Terminated', description: 'V4 has concluded its scheduled lifecycle audit.', time: '2 hours ago', iconColor: 'text-blue-500', bgColor: 'bg-blue-50' },
+    { id: 2, type: 'alert', title: 'Route Deviation', description: 'V12 detected 24km outside planned operational vector.', time: '4 hours ago', iconColor: 'text-amber-500', bgColor: 'bg-amber-50' },
+    { id: 3, type: 'compliance', title: 'License Renewal', description: 'D14 license audit required within 72 hours.', time: '1 day ago', iconColor: 'text-red-500', bgColor: 'bg-red-50' },
+    { id: 4, type: 'system', title: 'Audit Report', description: 'November Financial Intel report is locked and ready.', time: '2 days ago', iconColor: 'text-emerald-500', bgColor: 'bg-emerald-50' }
 ];
 
+export const generateAiInsights = () => [
+    { id: 1, title: 'Network Efficiency', description: 'Cross-hub routing optimization could reduce deadhead miles by 8%.', type: 'positive', actionText: 'View Network Heatmap' },
+    { id: 2, title: 'Asset Reliability', description: 'Ashok Leyland units showing 12% higher uptime vs fleet average.', type: 'info', actionText: 'Compare Performance' },
+    { id: 3, title: 'Operational Risk', description: '4 drivers approaching maximum duty hours. Schedule shift rotation.', type: 'warning', actionText: 'Manage Rosters' },
+    { id: 4, title: 'Fuel Intel', description: 'Unusual fuel spikes detected in Eastern Hub. Validate terminal logs.', type: 'negative', actionText: 'Investigate Discrepancy' }
+];
+
+export const generateDriverData = () => {
+    return mockDrivers.map(d => ({
+        ...d,
+        expiry: d.licenseExpiry,
+        complaints: d.complaints
+    }));
+};
+
+export const generateDriverHistory = (driverId) => [
+    { id: 101, date: 'Today, 09:42 AM', type: 'compliance', title: 'Asset Check Complete', description: 'Pre-flight checklist verified with 0 safety bypasses.', iconColor: 'text-emerald-500', bgColor: 'bg-emerald-50' },
+    { id: 102, date: 'Yesterday, 14:15 PM', type: 'alert', title: 'Telemetry Spike', description: 'Hard braking detected at Sector 7. Validation required.', iconColor: 'text-amber-500', bgColor: 'bg-amber-50' },
+    { id: 103, date: 'Oct 12, 08:00 AM', type: 'system', title: 'Shift Initialization', description: 'Logged on and authenticated for regional dispatch.', iconColor: 'text-blue-500', bgColor: 'bg-blue-50' }
+];
+
+// --- EXPENSE MOCK DATA STORE (DYNAMICALLY POPULATED) ---
+export let expenseDataStore = mockTrips.filter(t => t.status === 'Completed' || t.status === 'Dispatched').map((t, idx) => {
+    const isCompleted = t.status === 'Completed';
+    return {
+        id: `EXP-${1000 + idx}`,
+        tripId: t.id,
+        driverId: t.driverId,
+        distance: isCompleted ? (t.endOdometer - t.startOdometer) : Math.floor(Math.random() * 500) + 100,
+        fuelCost: Math.floor(Math.random() * 15000) + 5000,
+        miscExpense: pick([0, 0, 500, 1000, 250]),
+        status: isCompleted ? pick(['Approved', 'Completed']) : 'Pending',
+        date: t.date
+    };
+});
+
 let expenseListeners = [];
-
 export const getExpenses = () => [...expenseDataStore];
-
 export const subscribeToExpenses = (listener) => {
     expenseListeners.push(listener);
-    return () => {
-        expenseListeners = expenseListeners.filter(l => l !== listener);
-    };
+    return () => { expenseListeners = expenseListeners.filter(l => l !== listener); };
 };
-
-const notifyExpenseListeners = () => {
-    expenseListeners.forEach(listener => listener([...expenseDataStore]));
-};
-
+const notifyExpenseListeners = () => { expenseListeners.forEach(l => l([...expenseDataStore])); };
 export const addExpense = (expense) => {
-    const newExpense = {
-        ...expense,
-        id: `EXP-${Math.floor(1000 + Math.random() * 9000)}`,
-        date: new Date().toISOString()
-    };
+    const newExpense = { ...expense, id: `EXP-${Math.floor(1000 + Math.random() * 9000)}`, date: new Date().toISOString() };
     expenseDataStore = [newExpense, ...expenseDataStore];
     notifyExpenseListeners();
     return newExpense;
@@ -142,30 +230,6 @@ export const addExpense = (expense) => {
 export const getDriverExpenseStats = (driverId) => {
     const driverExpenses = expenseDataStore.filter(e => e.driverId === driverId);
     if (driverExpenses.length === 0) return { totalSpend: 0, avgPerTrip: 0, count: 0, trips: [] };
-
     const totalSpend = driverExpenses.reduce((sum, e) => sum + e.fuelCost + e.miscExpense, 0);
-    return {
-        totalSpend,
-        avgPerTrip: Math.round(totalSpend / driverExpenses.length),
-        count: driverExpenses.length,
-        trips: driverExpenses
-    };
+    return { totalSpend, avgPerTrip: Math.round(totalSpend / driverExpenses.length), count: driverExpenses.length, trips: driverExpenses };
 };
-// --- DISPATCHER MOCK DATA ---
-export const mockVehicles = [
-    { id: 'V1', nameModel: 'Volvo FH16', PlateNumber: 'FT-9082', type: 'Heavy Duty', status: 'Available', maxCapacity: 45000 },
-    { id: 'V2', nameModel: 'Scania R500', PlateNumber: 'SN-4412', type: 'Heavy Duty', status: 'On Trip', maxCapacity: 42000 },
-    { id: 'V3', nameModel: 'Mercedes Actros', PlateNumber: 'MB-7721', type: 'Medium Duty', status: 'Available', maxCapacity: 28000 },
-    { id: 'V4', nameModel: 'MAN TGX', PlateNumber: 'MN-1109', type: 'Heavy Duty', status: 'Available', maxCapacity: 40000 },
-];
-
-export const mockDrivers = [
-    { id: 'D1', name: 'John Doe', status: 'On Duty', licenseExpiry: '2027-12-31' },
-    { id: 'D2', name: 'Jane Smith', status: 'On Trip', licenseExpiry: '2026-06-15' },
-    { id: 'D3', name: 'Mike Johnson', status: 'Off Duty', licenseExpiry: '2025-01-20' },
-];
-
-export const mockTrips = [
-    { id: 'T1', vehicleId: 'V2', driverId: 'D2', status: 'Dispatched', origin: 'New York', destination: 'Chicago', cargoWeight: 38500, startOdometer: 125400 },
-    { id: 'T2', vehicleId: 'V1', driverId: 'D1', status: 'Completed', origin: 'Boston', destination: 'Miami', cargoWeight: 41200, startOdometer: 88200, endOdometer: 90150 },
-];

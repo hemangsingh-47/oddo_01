@@ -2,7 +2,7 @@ import React from 'react';
 import { ArrowUpRight, ArrowDownRight } from 'lucide-react';
 
 export const KPICard = ({ title, value, icon: Icon, trend, trendValue, colorClass }) => (
-    <div className="premium-card p-5 flex flex-col justify-between h-full hover:border-primary-300 transition-all border-l-4 border-l-transparent hover:border-l-primary-500 group">
+    <div className="fleet-card p-5 flex flex-col justify-between h-full hover:border-primary-300 transition-all border-l-4 border-l-transparent hover:border-l-primary-500 group">
         <div className="flex justify-between items-start mb-4">
             <div className={`p-2.5 rounded-xl ${colorClass || 'bg-primary-50 text-primary-600'} transition-transform group-hover:scale-110`}>
                 <Icon className="w-5 h-5" />

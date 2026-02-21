@@ -17,22 +17,22 @@ export default function TripDispatcher() {
         }
     };
 
-    const [vehicles, setVehicles] = useState(() => getSaved('fleet_vehicles', mockVehicles));
-    const [drivers, setDrivers] = useState(() => getSaved('fleet_drivers', mockDrivers));
-    const [trips, setTrips] = useState(() => getSaved('fleet_trips', mockTrips));
+    const [vehicles, setVehicles] = useState(() => getSaved('fleet_v2_vehicles', mockVehicles));
+    const [drivers, setDrivers] = useState(() => getSaved('fleet_v2_drivers', mockDrivers));
+    const [trips, setTrips] = useState(() => getSaved('fleet_v2_trips', mockTrips));
     const { logout } = useAuth();
 
     // Persistence Effect
     useEffect(() => {
-        localStorage.setItem('fleet_vehicles', JSON.stringify(vehicles));
+        localStorage.setItem('fleet_v2_vehicles', JSON.stringify(vehicles));
     }, [vehicles]);
 
     useEffect(() => {
-        localStorage.setItem('fleet_drivers', JSON.stringify(drivers));
+        localStorage.setItem('fleet_v2_drivers', JSON.stringify(drivers));
     }, [drivers]);
 
     useEffect(() => {
-        localStorage.setItem('fleet_trips', JSON.stringify(trips));
+        localStorage.setItem('fleet_v2_trips', JSON.stringify(trips));
     }, [trips]);
 
     // Business logic: Create Trip
@@ -71,7 +71,7 @@ export default function TripDispatcher() {
             if (t.id === tripId) {
                 if (t.status === 'Dispatched') {
                     setVehicles(vs => vs.map(v => v.id === t.vehicleId ? { ...v, status: 'Available' } : v));
-                    setDrivers(ds => ds.map(d => d.id === t.driverId ? { ...d, status: 'On Duty' } : d));
+                    setDrivers(ds => ds.map(d => d.id === d.driverId ? { ...d, status: 'On Duty' } : d));
                 }
                 return { ...t, status: 'Cancelled' };
             }
@@ -97,7 +97,7 @@ export default function TripDispatcher() {
                 </section>
 
                 <section className="table-section">
-                    <h2 className="section-headline">Active & Historical Dispatches</h2>
+                    <h2 className="section-headline">Active & Historical Discharges</h2>
                     <TripTable
                         trips={trips}
                         vehicles={vehicles}

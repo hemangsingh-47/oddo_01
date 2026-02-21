@@ -1,7 +1,7 @@
 import React from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { Activity, LayoutDashboard, PieChart, FileText, Settings, Bell, Users, DollarSign, LogOut } from 'lucide-react';
+import { Activity, LayoutDashboard, PieChart, FileText, Settings, Bell, Users, DollarSign, LogOut, Truck } from 'lucide-react';
 
 const Layout = () => {
     const { user, logout } = useAuth();
@@ -15,10 +15,12 @@ const Layout = () => {
 
     const navItems = [
         { id: 'dashboard', label: 'Control Center', icon: <Activity className="w-4 h-4" />, roles: ['FLEET_MANAGER', 'ADMIN'], path: '/dashboard' },
+        { id: 'vehicles', label: 'Vehicle Registry', icon: <Truck className="w-4 h-4" />, roles: ['DISPATCHER', 'FLEET_MANAGER', 'ADMIN'], path: '/vehicles' },
         { id: 'dispatch', label: 'Trip Dispatch', icon: <LayoutDashboard className="w-4 h-4" />, roles: ['DISPATCHER', 'FLEET_MANAGER', 'ADMIN'], path: '/dispatch' },
         { id: 'analytics', label: 'Operational Analytics', icon: <PieChart className="w-4 h-4" />, roles: ['FINANCIAL_ANALYST', 'FLEET_MANAGER', 'ADMIN'], path: '/analytics' },
         { id: 'drivers', label: 'Drivers', icon: <Users className="w-4 h-4" />, roles: ['FLEET_MANAGER', 'ADMIN'], path: '/drivers' },
         { id: 'expenses', label: 'Expenses', icon: <DollarSign className="w-4 h-4" />, roles: ['FINANCIAL_ANALYST', 'FLEET_MANAGER', 'ADMIN'], path: '/expenses' },
+        { id: 'maintenance', label: 'Maintenance Logs', icon: <FileText className="w-4 h-4" />, roles: ['FLEET_MANAGER', 'ADMIN'], path: '/maintenance' },
     ];
 
     const filteredNavItems = navItems.filter(item => item.roles.includes(user.role));

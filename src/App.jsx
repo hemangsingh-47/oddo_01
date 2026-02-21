@@ -14,6 +14,8 @@ import OperationalAnalytics from './components/analytics_page/OperationalAnalyti
 import DriverManagement from './components/driver_page/DriverManagement';
 import ExpenseLogging from './components/Expence_page/ExpenseLogging';
 import DriverDetail from './components/driver_page/DriverDetail';
+import VehicleRegistry from './components/vehicle_register/VehicleRegistry';
+import MaintenanceLogs from './components/service_log/MaintenanceLogs';
 
 function App() {
   const { user } = useAuth();
@@ -52,6 +54,12 @@ function App() {
         } />
 
         {/* Terminal Routes */}
+        <Route path="/vehicles" element={
+          <ProtectedRoute allowedRoles={['DISPATCHER', 'FLEET_MANAGER', 'ADMIN']}>
+            <VehicleRegistry />
+          </ProtectedRoute>
+        } />
+
         <Route path="/dispatch" element={
           <ProtectedRoute allowedRoles={['DISPATCHER', 'FLEET_MANAGER', 'ADMIN']}>
             <TripDispatcher />
@@ -79,6 +87,12 @@ function App() {
         <Route path="/drivers/:id" element={
           <ProtectedRoute allowedRoles={['FLEET_MANAGER', 'ADMIN']}>
             <DriverDetail />
+          </ProtectedRoute>
+        } />
+
+        <Route path="/maintenance" element={
+          <ProtectedRoute allowedRoles={['FLEET_MANAGER', 'ADMIN']}>
+            <MaintenanceLogs />
           </ProtectedRoute>
         } />
 

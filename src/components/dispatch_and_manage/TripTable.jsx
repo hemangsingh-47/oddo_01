@@ -1,5 +1,6 @@
 import React from 'react';
 import TripRow from './TripRow';
+import { Truck, Users, Weight, Map, Activity, Ruler, Cog, Fingerprint } from 'lucide-react';
 
 export default function TripTable({ trips, vehicles, drivers, dispatchTrip, completeTrip, cancelTrip }) {
     // Sort trips: active ones first, completed/cancelled last
@@ -9,17 +10,17 @@ export default function TripTable({ trips, vehicles, drivers, dispatchTrip, comp
     });
 
     return (
-        <div className="premium-table-container">
+        <div className="premium-table-container animate-in stagger-2">
             <table className="premium-table">
                 <thead>
                     <tr>
-                        <th>Trip ID</th>
-                        <th>Vehicle & Driver</th>
-                        <th>Cargo</th>
-                        <th>Route Details</th>
-                        <th>Status</th>
-                        <th>Distance</th>
-                        <th>Actions</th>
+                        <th className="w-[120px]"><div className="flex items-center gap-2"><Fingerprint className="w-3 h-3" /> Trip ID</div></th>
+                        <th className="min-w-[200px]"><Truck className="w-3 h-3 inline mr-2" /> Vehicle & Driver</th>
+                        <th className="min-w-[120px]"><Weight className="w-3 h-3 inline mr-2" /> Cargo</th>
+                        <th className="min-w-[220px]"><Map className="w-3 h-3 inline mr-2" /> Route Details</th>
+                        <th className="text-center w-[140px]"><Activity className="w-3 h-3 inline mr-2" /> Status</th>
+                        <th className="text-center w-[120px]"><Ruler className="w-3 h-3 inline mr-2" /> Distance</th>
+                        <th className="text-right w-[240px]"><Cog className="w-3 h-3 inline mr-2" /> Actions</th>
                     </tr>
                 </thead>
                 <tbody>

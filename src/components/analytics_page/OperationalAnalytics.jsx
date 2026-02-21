@@ -15,7 +15,7 @@ import {
 } from '../../data/analyticsMock';
 
 const AdvancedKPICard = ({ title, value, change, changeType, icon: Icon, sparklineData, dataKey, sparklineColor, tooltip }) => (
-    <div className="premium-card p-5 flex flex-col group cursor-default relative overflow-hidden">
+    <div className="fleet-card p-5 flex flex-col group cursor-default relative overflow-hidden">
         <div className="flex justify-between items-start mb-2 relative z-10">
             <div className="flex items-center gap-2">
                 <div className="p-2.5 bg-primary-50 rounded-xl group-hover:bg-primary-100 transition-colors duration-300">
@@ -253,7 +253,7 @@ export default function OperationalAnalytics({ onNavigateToDrivers }) {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
                 {/* AI Insights Panel */}
-                <div className="premium-card p-6 lg:col-span-2 flex flex-col h-full">
+                <div className="fleet-card p-6 lg:col-span-2 flex flex-col h-full">
                     <div className="flex justify-between items-center mb-6">
                         <div>
                             <h3 className="text-base font-bold text-gray-900 flex items-center gap-2">
@@ -284,7 +284,7 @@ export default function OperationalAnalytics({ onNavigateToDrivers }) {
                 </div>
 
                 {/* Activity Feed */}
-                <div className="premium-card p-6 flex flex-col h-full">
+                <div className="fleet-card p-6 flex flex-col h-full">
                     <div className="flex justify-between items-center mb-6">
                         <div>
                             <h3 className="text-base font-bold text-gray-900">Recent Activity</h3>
@@ -318,7 +318,7 @@ export default function OperationalAnalytics({ onNavigateToDrivers }) {
             {/* Charts Row */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 xl:gap-8 hover-effect">
                 {/* Fuel Efficiency Trend */}
-                <div className="premium-card p-6">
+                <div className="fleet-card p-6">
                     <div className="flex justify-between items-center mb-6">
                         <div>
                             <h3 className="text-base font-bold text-gray-900">Fuel Efficiency Trend (km/L)</h3>
@@ -349,7 +349,7 @@ export default function OperationalAnalytics({ onNavigateToDrivers }) {
                 </div>
 
                 {/* Revenue vs Costs */}
-                <div className="premium-card p-6">
+                <div className="fleet-card p-6">
                     <div className="flex justify-between items-center mb-6">
                         <div>
                             <h3 className="text-base font-bold text-gray-900">Financial Distribution</h3>
@@ -377,7 +377,7 @@ export default function OperationalAnalytics({ onNavigateToDrivers }) {
                 </div>
 
                 {/* Fleet Utilization Distribution */}
-                <div className="premium-card p-6 lg:col-span-2 relative">
+                <div className="fleet-card p-6 lg:col-span-2 relative">
                     <div className="flex justify-between items-center mb-6">
                         <div>
                             <h3 className="text-base font-bold text-gray-900">Fleet Allocation Status</h3>
@@ -431,7 +431,7 @@ export default function OperationalAnalytics({ onNavigateToDrivers }) {
             </div>
 
             {/* Financial Summary Table */}
-            <div className="premium-card overflow-hidden mt-6">
+            <div className="fleet-card overflow-hidden mt-6">
                 <div className="px-6 py-5 border-b border-gray-100 bg-gray-50/50 flex justify-between items-center">
                     <div>
                         <h3 className="text-base font-bold text-gray-900">Detailed Financial Register</h3>

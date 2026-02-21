@@ -104,7 +104,7 @@ export default function DriverDetail({ driverId: propDriverId, onBack }) {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
                 {/* Identity Card */}
-                <div className="premium-card p-6 lg:col-span-2 flex flex-col md:flex-row gap-6 items-start md:items-center relative overflow-hidden">
+                <div className="fleet-card p-6 lg:col-span-2 flex flex-col md:flex-row gap-6 items-start md:items-center relative overflow-hidden">
                     <div className="absolute top-0 right-0 w-64 h-64 bg-primary-50 rounded-full blur-3xl -z-10 translate-x-1/3 -translate-y-1/3"></div>
 
                     <div className="h-24 w-24 rounded-full bg-gradient-to-br from-primary-600 to-primary-800 flex items-center justify-center text-white text-3xl font-extrabold shadow-lg shrink-0 border-4 border-white">
@@ -137,7 +137,7 @@ export default function DriverDetail({ driverId: propDriverId, onBack }) {
                 </div>
 
                 {/* Quick Actions Panel */}
-                <div className="premium-card p-6 border-l-4 border-l-primary-500">
+                <div className="fleet-card p-6 border-l-4 border-l-primary-500">
                     <h3 className="text-sm font-bold text-gray-900 mb-4 uppercase tracking-wider">Fleet Admin Actions</h3>
                     <div className="space-y-3">
                         <button className="w-full text-left px-4 py-3 rounded-lg border border-gray-200 hover:border-primary-500 hover:bg-primary-50 transition-all font-semibold text-sm text-gray-700 flex items-center gap-3">
@@ -180,7 +180,7 @@ export default function DriverDetail({ driverId: propDriverId, onBack }) {
 
             {/* Financial Overview & Recent Expenses */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div className="premium-card p-6 flex flex-col justify-center bg-gray-900 text-white relative overflow-hidden">
+                <div className="fleet-card p-6 flex flex-col justify-center bg-gray-900 text-white relative overflow-hidden">
                     <div className="absolute top-0 right-0 w-32 h-32 bg-primary-500 rounded-full blur-3xl opacity-20 -z-0 translate-x-1/2 -translate-y-1/2"></div>
                     <h3 className="text-sm font-bold text-gray-400 mb-4 uppercase tracking-wider relative z-10">Financial Profile</h3>
 
@@ -202,7 +202,7 @@ export default function DriverDetail({ driverId: propDriverId, onBack }) {
                     </div>
                 </div>
 
-                <div className="premium-card p-6 lg:col-span-2 overflow-hidden flex flex-col">
+                <div className="fleet-card p-6 lg:col-span-2 overflow-hidden flex flex-col">
                     <div className="flex justify-between items-center mb-4">
                         <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wider">Recent Trip Expenses</h3>
                     </div>
@@ -245,7 +245,7 @@ export default function DriverDetail({ driverId: propDriverId, onBack }) {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
                 {/* Completion Rate Trend */}
-                <div className="premium-card p-6 lg:col-span-2">
+                <div className="fleet-card p-6 lg:col-span-2">
                     <div className="flex justify-between items-center mb-6">
                         <div>
                             <h3 className="text-base font-bold text-gray-900">Completion Rate Trend</h3>
@@ -275,7 +275,7 @@ export default function DriverDetail({ driverId: propDriverId, onBack }) {
                 </div>
 
                 {/* Driver Activity Feed */}
-                <div className="premium-card p-6 flex flex-col h-full bg-gray-50/30">
+                <div className="fleet-card p-6 flex flex-col h-full bg-gray-50/30">
                     <div className="flex justify-between items-center mb-6">
                         <div>
                             <h3 className="text-base font-bold text-gray-900">Driver Activity Log</h3>
