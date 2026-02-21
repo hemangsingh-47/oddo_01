@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import OperationalAnalytics from './components/OperationalAnalytics';
-import { Activity, LayoutDashboard, PieChart, FileText, Settings, Bell } from 'lucide-react';
+import DriverManagement from './components/DriverManagement';
+import { Activity, LayoutDashboard, PieChart, FileText, Settings, Bell, Users } from 'lucide-react';
 
 function App() {
   const [activeTab, setActiveTab] = useState('analytics');
@@ -42,6 +43,15 @@ function App() {
                   <PieChart className="w-4 h-4" /> Operational Analytics
                 </button>
                 <button
+                  onClick={() => setActiveTab('drivers')}
+                  className={`inline-flex items-center px-3 pt-1 border-b-2 gap-2 text-sm font-medium ${activeTab === 'drivers'
+                    ? 'border-primary-500 text-primary-900'
+                    : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
+                    }`}
+                >
+                  <Users className="w-4 h-4" /> Drivers
+                </button>
+                <button
                   onClick={() => setActiveTab('reports')}
                   className={`inline-flex items-center px-3 pt-1 border-b-2 gap-2 text-sm font-medium ${activeTab === 'reports'
                     ? 'border-primary-500 text-primary-900'
@@ -76,7 +86,9 @@ function App() {
       {/* Main Content */}
       <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
         {activeTab === 'analytics' ? (
-          <OperationalAnalytics />
+          <OperationalAnalytics onNavigateToDrivers={() => setActiveTab('drivers')} />
+        ) : activeTab === 'drivers' ? (
+          <DriverManagement />
         ) : (
           <div className="flex flex-col items-center justify-center min-h-[500px] text-center glass-panel rounded-3xl border border-gray-200/50 p-12">
             <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mb-6 shadow-inner">

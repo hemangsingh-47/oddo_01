@@ -55,7 +55,7 @@ const AdvancedKPICard = ({ title, value, change, changeType, icon: Icon, sparkli
     </div>
 );
 
-export default function OperationalAnalytics() {
+export default function OperationalAnalytics({ onNavigateToDrivers }) {
     const [financialData, setFinancialData] = useState([]);
     const [efficiencyData, setEfficiencyData] = useState([]);
     const [vehicleData, setVehicleData] = useState([]);
@@ -355,12 +355,20 @@ export default function OperationalAnalytics() {
                 </div>
 
                 {/* Fleet Utilization Distribution */}
-                <div className="premium-card p-6 lg:col-span-2">
+                <div className="premium-card p-6 lg:col-span-2 relative">
                     <div className="flex justify-between items-center mb-6">
                         <div>
                             <h3 className="text-base font-bold text-gray-900">Fleet Allocation Status</h3>
                             <p className="text-xs text-gray-500 mt-0.5">Current distribution of all tracked vehicles</p>
                         </div>
+                        {onNavigateToDrivers && (
+                            <button
+                                onClick={onNavigateToDrivers}
+                                className="text-xs font-bold bg-primary-50 text-primary-700 hover:bg-primary-100 hover:text-primary-800 px-3 py-1.5 rounded-lg border border-primary-100 transition-colors"
+                            >
+                                View Driver Roster
+                            </button>
+                        )}
                     </div>
                     <div className="h-[280px] flex items-center justify-center relative">
                         {/* Center Metric */}
