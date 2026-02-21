@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { ArrowLeft, User, IdCard, ShieldAlert, Award, AlertTriangle, TrendingUp, Calendar, Clock, MapPin, CheckCircle, FileText, Ban } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer } from 'recharts';
-import { generateDriverData, generateDriverHistory } from '../data/analyticsMock';
+import { generateDriverData, generateDriverHistory, getDriverExpenseStats, subscribeToExpenses } from '../data/analyticsMock';
 
 const DetailCard = ({ title, value, icon: Icon, colorClass, subtitle }) => (
     <div className="bg-white border border-gray-100 rounded-xl p-5 shadow-sm flex items-start gap-4">
@@ -19,6 +19,7 @@ const DetailCard = ({ title, value, icon: Icon, colorClass, subtitle }) => (
 export default function DriverDetail({ driverId, onBack }) {
     const [driver, setDriver] = useState(null);
     const [history, setHistory] = useState([]);
+    const [expenseStats, setExpenseStats] = useState({ totalSpend: 0, avgPerTrip: 0, count: 0, trips: [] });
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
@@ -29,8 +30,19 @@ export default function DriverDetail({ driverId, onBack }) {
             const foundDriver = allDrivers.find(d => d.id === driverId);
             setDriver(foundDriver);
             setHistory(generateDriverHistory(driverId));
+
+            // Set initial expense stats
+            setExpenseStats(getDriverExpenseStats(driverId));
+
             setIsLoading(false);
         }, 400);
+
+        // Subscribe to live expense updates
+        const unsubscribe = subscribeToExpenses(() => {
+            setExpenseStats(getDriverExpenseStats(driverId));
+        });
+
+        return () => unsubscribe();
     }, [driverId]);
 
     // Mock trend data for completion rate
@@ -154,6 +166,69 @@ export default function DriverDetail({ driverId, onBack }) {
                     colorClass={`bg-${complaints === 0 ? 'gray' : 'red'}-100 text-${complaints === 0 ? 'gray' : 'red'}-600`}
                     subtitle="Internal flags on record"
                 />
+            </div>
+
+            {/* Financial Overview & Recent Expenses */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div className="premium-card p-6 flex flex-col justify-center bg-gray-900 text-white relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-primary-500 rounded-full blur-3xl opacity-20 -z-0 translate-x-1/2 -translate-y-1/2"></div>
+                    <h3 className="text-sm font-bold text-gray-400 mb-4 uppercase tracking-wider relative z-10">Financial Profile</h3>
+
+                    <div className="space-y-4 relative z-10">
+                        <div>
+                            <p className="text-xs font-bold text-gray-500 mb-1">Total Fuel Spend</p>
+                            <p className="text-3xl font-extrabold text-white">₹{expenseStats.totalSpend.toLocaleString()}</p>
+                        </div>
+                        <div className="flex gap-8">
+                            <div>
+                                <p className="text-xs font-bold text-gray-500 mb-1">Avg. Cost / Trip</p>
+                                <p className="text-lg font-bold text-gray-200">₹{expenseStats.avgPerTrip.toLocaleString()}</p>
+                            </div>
+                            <div>
+                                <p className="text-xs font-bold text-gray-500 mb-1">Trips Logged</p>
+                                <p className="text-lg font-bold text-gray-200">{expenseStats.count}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="premium-card p-6 lg:col-span-2 overflow-hidden flex flex-col">
+                    <div className="flex justify-between items-center mb-4">
+                        <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wider">Recent Trip Expenses</h3>
+                    </div>
+                    {expenseStats.trips.length > 0 ? (
+                        <div className="overflow-auto flex-1 custom-scrollbar">
+                            <table className="min-w-full divide-y divide-gray-100">
+                                <thead className="bg-gray-50 uppercase text-[10px] font-bold text-gray-500">
+                                    <tr>
+                                        <th className="px-4 py-2 text-left">Trip ID</th>
+                                        <th className="px-4 py-2 text-left">Distance</th>
+                                        <th className="px-4 py-2 text-right">Fuel Cost</th>
+                                        <th className="px-4 py-2 text-center">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="bg-white divide-y divide-gray-50">
+                                    {expenseStats.trips.slice(0, 4).map(trip => (
+                                        <tr key={trip.id} className="hover:bg-gray-50">
+                                            <td className="px-4 py-3 text-sm font-bold text-gray-900">#{trip.tripId}</td>
+                                            <td className="px-4 py-3 text-sm text-gray-600">{trip.distance} km</td>
+                                            <td className="px-4 py-3 text-sm font-bold text-amber-600 text-right">₹{trip.fuelCost.toLocaleString()}</td>
+                                            <td className="px-4 py-3 text-sm text-center">
+                                                <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${trip.status === 'Completed' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>
+                                                    {trip.status}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    ) : (
+                        <div className="flex-1 flex flex-col items-center justify-center text-center p-6">
+                            <p className="text-gray-400 text-sm font-medium">No recorded expenses for this driver yet.</p>
+                        </div>
+                    )}
+                </div>
             </div>
 
             {/* Analytics & Feed Row */}

@@ -9,7 +9,9 @@ import {
     calculateUtilization,
     identifyDeadStock,
     generateActivityFeed,
-    generateAiInsights
+    generateAiInsights,
+    getExpenses,
+    subscribeToExpenses
 } from '../data/analyticsMock';
 
 const AdvancedKPICard = ({ title, value, change, changeType, icon: Icon, sparklineData, dataKey, sparklineColor, tooltip }) => (
@@ -61,8 +63,15 @@ export default function OperationalAnalytics({ onNavigateToDrivers }) {
     const [vehicleData, setVehicleData] = useState([]);
     const [activityFeed, setActivityFeed] = useState([]);
     const [aiInsights, setAiInsights] = useState([]);
+    const [expenses, setExpenses] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [dateRange, setDateRange] = useState('30D');
+
+    useEffect(() => {
+        setExpenses(getExpenses());
+        const unsubscribe = subscribeToExpenses(setExpenses);
+        return () => unsubscribe();
+    }, []);
 
     useEffect(() => {
         // Simulate API fetch
@@ -80,8 +89,17 @@ export default function OperationalAnalytics({ onNavigateToDrivers }) {
     const metrics = useMemo(() => {
         if (!financialData.length || !vehicleData.length) return null;
 
-        const currentMonth = financialData[financialData.length - 1];
+        const currentMonth = { ...financialData[financialData.length - 1] };
         const prevMonth = financialData[financialData.length - 2];
+
+        // Add live expenses to the current month's baseline
+        const liveFuelCost = expenses.reduce((sum, exp) => sum + exp.fuelCost, 0);
+        const liveMiscCost = expenses.reduce((sum, exp) => sum + exp.miscExpense, 0);
+
+        currentMonth.fuelCost += liveFuelCost;
+        currentMonth.maintenance += liveMiscCost;
+        currentMonth.revenue -= (liveFuelCost + liveMiscCost); // Adjust net logically for demo
+        currentMonth.netProfit = currentMonth.revenue - currentMonth.fuelCost - currentMonth.maintenance;
 
         const totalRevenue = currentMonth.revenue;
         const totalCosts = currentMonth.fuelCost + currentMonth.maintenance;
@@ -124,8 +142,12 @@ export default function OperationalAnalytics({ onNavigateToDrivers }) {
             distributionData,
             revenueSparklines: currentMonth.sparklineRevenue,
             fuelSparklines: currentMonth.sparklineFuel,
+            adjustedFinancialData: [
+                ...financialData.slice(0, financialData.length - 1),
+                currentMonth
+            ]
         };
-    }, [financialData, vehicleData]);
+    }, [financialData, vehicleData, expenses]);
 
     const deadStock = identifyDeadStock(vehicleData);
     const formatCurrency = (value) => `Rs. ${(value / 100000).toFixed(1)}L`;
@@ -336,7 +358,7 @@ export default function OperationalAnalytics({ onNavigateToDrivers }) {
                     </div>
                     <div className="h-[280px]">
                         <ResponsiveContainer width="100%" height="100%">
-                            <BarChart data={financialData.slice(-6)} margin={{ top: 5, right: 10, left: 10, bottom: 5 }}>
+                            <BarChart data={(metrics?.adjustedFinancialData || financialData).slice(-6)} margin={{ top: 5, right: 10, left: 10, bottom: 5 }}>
                                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
                                 <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 11, fontWeight: 500 }} dy={10} />
                                 <YAxis axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 11, fontWeight: 500 }} tickFormatter={(val) => `${val / 100000}L`} />
@@ -431,7 +453,7 @@ export default function OperationalAnalytics({ onNavigateToDrivers }) {
                             </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-50">
-                            {[...financialData].reverse().map((row, index) => (
+                            {[...(metrics?.adjustedFinancialData || financialData)].reverse().map((row, index) => (
                                 <tr key={index} className="hover:bg-primary-50/30 transition-colors group cursor-pointer">
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">{row.month}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-700">{formatCurrency(row.revenue)}</td>

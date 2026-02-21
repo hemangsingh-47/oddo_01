@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import OperationalAnalytics from './components/OperationalAnalytics';
 import DriverManagement from './components/DriverManagement';
-import { Activity, LayoutDashboard, PieChart, FileText, Settings, Bell, Users } from 'lucide-react';
+import ExpenseLogging from './components/ExpenseLogging';
+import { Activity, LayoutDashboard, PieChart, FileText, Settings, Bell, Users, DollarSign } from 'lucide-react';
 
 function App() {
   const [activeTab, setActiveTab] = useState('analytics');
@@ -52,6 +53,15 @@ function App() {
                   <Users className="w-4 h-4" /> Drivers
                 </button>
                 <button
+                  onClick={() => setActiveTab('expenses')}
+                  className={`inline-flex items-center px-3 pt-1 border-b-2 gap-2 text-sm font-medium ${activeTab === 'expenses'
+                    ? 'border-primary-500 text-primary-900'
+                    : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
+                    }`}
+                >
+                  <DollarSign className="w-4 h-4" /> Expenses
+                </button>
+                <button
                   onClick={() => setActiveTab('reports')}
                   className={`inline-flex items-center px-3 pt-1 border-b-2 gap-2 text-sm font-medium ${activeTab === 'reports'
                     ? 'border-primary-500 text-primary-900'
@@ -89,6 +99,8 @@ function App() {
           <OperationalAnalytics onNavigateToDrivers={() => setActiveTab('drivers')} />
         ) : activeTab === 'drivers' ? (
           <DriverManagement />
+        ) : activeTab === 'expenses' ? (
+          <ExpenseLogging />
         ) : (
           <div className="flex flex-col items-center justify-center min-h-[500px] text-center glass-panel rounded-3xl border border-gray-200/50 p-12">
             <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mb-6 shadow-inner">

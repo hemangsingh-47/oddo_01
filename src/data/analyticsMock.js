@@ -101,3 +101,53 @@ export const generateDriverHistory = (driverId) => {
         { id: 105, date: 'Sep 28, 11:10 AM', type: 'alert', title: 'Speeding Violation (Minor)', description: 'Exceeded posted speed limit by 8mph for 2 minutes.', iconColor: 'text-amber-500', bgColor: 'bg-amber-50' }
     ];
 };
+
+// --- EXPENSE MOCK DATA STORE ---
+// We create a simple store to allow components to share state
+let expenseDataStore = [
+    { id: 'EXP-321', tripId: '321', driverId: 'devashya', distance: 1000, fuelCost: 19000, miscExpense: 500, status: 'Completed', date: '2023-10-24T10:00:00Z' },
+    { id: 'EXP-322', tripId: '322', driverId: 'venerated_starling', distance: 450, fuelCost: 8500, miscExpense: 0, status: 'Approved', date: '2023-10-25T14:30:00Z' },
+    { id: 'EXP-323', tripId: '323', driverId: 'cuddly_zebra', distance: 1200, fuelCost: 22000, miscExpense: 1200, status: 'Pending', date: '2023-10-26T09:15:00Z' },
+    { id: 'EXP-324', tripId: '324', driverId: 'advanced_falcon', distance: 300, fuelCost: 5600, miscExpense: 150, status: 'Completed', date: '2023-10-26T16:45:00Z' },
+    { id: 'EXP-325', tripId: '325', driverId: 'kartik_joshi', distance: 800, fuelCost: 15500, miscExpense: 0, status: 'Completed', date: '2023-10-27T08:20:00Z' },
+    { id: 'EXP-326', tripId: '326', driverId: 'devashya', distance: 600, fuelCost: 11000, miscExpense: 300, status: 'Pending', date: '2023-10-27T11:00:00Z' }
+];
+
+let expenseListeners = [];
+
+export const getExpenses = () => [...expenseDataStore];
+
+export const subscribeToExpenses = (listener) => {
+    expenseListeners.push(listener);
+    return () => {
+        expenseListeners = expenseListeners.filter(l => l !== listener);
+    };
+};
+
+const notifyExpenseListeners = () => {
+    expenseListeners.forEach(listener => listener([...expenseDataStore]));
+};
+
+export const addExpense = (expense) => {
+    const newExpense = {
+        ...expense,
+        id: `EXP-${Math.floor(1000 + Math.random() * 9000)}`,
+        date: new Date().toISOString()
+    };
+    expenseDataStore = [newExpense, ...expenseDataStore];
+    notifyExpenseListeners();
+    return newExpense;
+};
+
+export const getDriverExpenseStats = (driverId) => {
+    const driverExpenses = expenseDataStore.filter(e => e.driverId === driverId);
+    if (driverExpenses.length === 0) return { totalSpend: 0, avgPerTrip: 0, count: 0, trips: [] };
+
+    const totalSpend = driverExpenses.reduce((sum, e) => sum + e.fuelCost + e.miscExpense, 0);
+    return {
+        totalSpend,
+        avgPerTrip: Math.round(totalSpend / driverExpenses.length),
+        count: driverExpenses.length,
+        trips: driverExpenses
+    };
+};
