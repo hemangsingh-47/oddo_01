@@ -22,9 +22,6 @@ It provides a clean and powerful interface for:
 ## 📸 Project Preview
 
 ![FleetFlow Dashboard](./assets/fleetflow-dashboard.png)
-
-> 💡 Tip: Add your screenshot inside an `assets` folder and name it `fleetflow-dashboard.png`
-
 ---
 
 ## ✨ Features
