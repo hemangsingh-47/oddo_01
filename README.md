@@ -1,16 +1,76 @@
-# React + Vite
+# 🚛 FleetFlow — Global Fleet Command & Intelligence
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+FleetFlow is a modern **fleet management dashboard** designed to monitor, manage, and optimize transportation operations in real-time.
 
-Currently, two official plugins are available:
+It provides a clean and powerful interface for:
+- Fleet utilization tracking
+- Driver availability monitoring
+- Dispatch operations
+- Expense & logistics analytics
+- Maintenance log management
+- Live operational manifest view
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## 🔗 Live Demo
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+🌐 **Website:** [FleetFlow Live](https://fleet-flow-coding-gita.netlify.app/)  
+📦 **GitHub Repo:** [oddo_01](https://github.com/hemangsingh-47/oddo_01)
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 📸 Project Preview
+
+![FleetFlow Dashboard](./assets/fleetflow-dashboard.png)
+
+> 💡 Tip: Add your screenshot inside an `assets` folder and name it `fleetflow-dashboard.png`
+
+---
+
+## ✨ Features
+
+- 📊 **Control Center Dashboard**
+- 🚚 **Vehicle Registry**
+- 🧭 **Trip Dispatch System**
+- 📈 **Operational Analytics**
+- 👨‍✈️ **Driver Management**
+- 💰 **Expense Tracking**
+- 🛠️ **Maintenance Logs**
+- 🌍 **Global Map CTA**
+- 📦 **Live Manifest Panel**
+- 📱 **Responsive & Modern UI**
+
+---
+
+## 🛠️ Tech Stack
+
+### Frontend
+- **React.js**
+- **Vite**
+- **Tailwind CSS**
+- **JavaScript (ES6+)**
+
+### UI / Design
+- **Lucide Icons / React Icons**
+- **Modern Dashboard Layout**
+- **Card-based Analytics UI**
+
+### Deployment
+- **Netlify**
+
+---
+
+## 📂 Project Structure
+
+```bash
+oddo_01/
+│── public/
+│── src/
+│   ├── components/
+│   ├── pages/
+│   ├── assets/
+│   ├── App.jsx
+│   └── main.jsx
+│── package.json
+│── vite.config.js
+│── README.md
